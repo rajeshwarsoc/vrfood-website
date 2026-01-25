@@ -77,12 +77,22 @@ export default function Home() {
           </Link>
         </div>
         <div className={styles.cardsScroll}>
-          {featuredFood.map((item) => (
-            <div key={item.id} className={styles.categoryCard}>
-              <img src={item.image} alt={item.name} className={styles.categoryImage} loading="lazy" />
-              <div className={styles.categoryName}>{item.name}</div>
-            </div>
-          ))}
+    {featuredFood.map((item) => (
+  <Link
+    key={item.id}
+    to="/food"
+    className={styles.categoryCard}
+  >
+    <img
+      src={item.image}
+      alt={item.name}
+      className={styles.categoryImage}
+      loading="lazy"
+    />
+    <div className={styles.categoryName}>{item.name}</div>
+  </Link>
+))}
+
         </div>
       </section>
 
