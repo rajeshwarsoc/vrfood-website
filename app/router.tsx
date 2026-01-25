@@ -18,6 +18,7 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
 
+
       { path: "cakes", element: <Cakes /> },
       { path: "cakes/:categoryId", element: <CakeCategory /> },
 
@@ -31,4 +32,3 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
-
