@@ -1,5 +1,6 @@
 import type { Route } from "./+types/home";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+
 
 import styles from "./home.module.css";
 import { Header } from "~/components/header/header";

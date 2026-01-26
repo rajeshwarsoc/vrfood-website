@@ -1,4 +1,5 @@
-import { createBrowserRouter } from "react-router";
+import { createBrowserRouter } from "react-router-dom";
+
 import RootLayout from "./root";
 
 import Home from "./routes/home";
@@ -11,6 +12,9 @@ import Delivery from "./routes/delivery";
 import Contact from "./routes/contact";
 import Configurator from "./routes/configurator.$designId";
 
+import { cakesLoader } from "./loaders/cakes.loader";
+import { cakeCategoryLoader } from "./loaders/cakeCategory.loader";
+
 export const router = createBrowserRouter([
   {
     path: "/",
@@ -18,12 +22,19 @@ export const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
 
+      {
+        path: "cakes",
+        element: <Cakes />,
+        loader: cakesLoader,
+      },
 
-      { path: "cakes", element: <Cakes /> },
-      { path: "cakes/:categoryId", element: <CakeCategory /> },
+      {
+        path: "cakes/:categoryId",
+        element: <CakeCategory />,
+        loader: cakeCategoryLoader,
+      },
 
       { path: "configurator/:designId", element: <Configurator /> },
-
       { path: "desserts", element: <Desserts /> },
       { path: "food", element: <Food /> },
       { path: "about", element: <About /> },
@@ -32,3 +43,4 @@ export const router = createBrowserRouter([
     ],
   },
 ]);
+
