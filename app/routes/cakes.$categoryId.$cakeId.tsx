@@ -1,5 +1,4 @@
 import { useLoaderData, Link } from "react-router-dom";
-
 import { Header } from "~/components/header/header";
 import { FloatingMessengers } from "~/components/floating-messengers/floating-messengers";
 import { urlFor } from "~/lib/sanity/imageUrl";
@@ -9,7 +8,11 @@ type Cake = {
   title: string;
   price?: number;
   description?: string;
-  image?: any;
+  image?: {
+    asset?: {
+      _ref?: string;
+    };
+  };
 };
 
 export default function CakeDetail() {
@@ -32,7 +35,7 @@ export default function CakeDetail() {
       <div className={styles.content}>
         <h1>{cake.title}</h1>
 
-        {cake.image && (
+        {cake.image?.asset && (
           <img
             src={urlFor(cake.image).width(800).url()}
             alt={cake.title}
@@ -48,3 +51,4 @@ export default function CakeDetail() {
     </div>
   );
 }
+

@@ -11,6 +11,7 @@
     "@dazl/color-scheme": "^1.2.1",
     "@hookform/resolvers": "^5.2.2",
     "@sanity/client": "^7.14.1",
+    "@sanity/image-url": "^2.0.3",
     "classnames": "^2.5.1",
     "cmdk": "^1.1.1",
     "embla-carousel-react": "^8.6.0",

@@ -1,49 +1,37 @@
 import type { LoaderFunctionArgs } from "react-router-dom";
 import { sanityClient } from "~/lib/sanity/client";
 
-export async function cakeCategoryLoader({ params }: LoaderFunctionArgs) {
-  const slug = params.categoryId;
+export async function cakesByCategoryLoader({ params }: LoaderFunctionArgs) {
+  const { categoryId } = params;
 
-  if (!sanityClient || !slug) {
-    return { category: null, cakes: [] };
+  if (!categoryId) {
+    throw new Response("Category not found", { status: 404 });
   }
 
-  try {
-    // 1️⃣ Fetch category first
-    const category = await sanityClient.fetch(
-      `
-      *[_type == "category" && slug.current == $slug][0]{
+  const query = `
+    {
+      "category": *[_type == "category" && slug.current == $slug][0]{
         _id,
         title,
         "slug": slug.current
-      }
-      `,
-      { slug }
-    );
-
-    if (!category?._id) {
-      return { category: null, cakes: [] };
-    }
-
-    // 2️⃣ Fetch cakes by category _ref (MOST RELIABLE)
-    const cakes = await sanityClient.fetch(
-      `
-      *[_type == "cake" && category._ref == $categoryId]{
+      },
+      "cakes": *[_type == "cake" && category->slug.current == $slug]{
         _id,
         title,
         price,
-        description
+        description,
+        "slug": slug.current,
+        image{
+          asset->{_id, url}
+        }
       }
-      `,
-      { categoryId: category._id }
-    );
+    }
+  `;
 
-    return {
-      category,
-      cakes: cakes ?? [],
-    };
-  } catch (error) {
-    console.error("[cakeCategoryLoader] error:", error);
-    return { category: null, cakes: [] };
-  }
+  const data = await sanityClient.fetch(query, {
+    slug: categoryId,
+  });
+
+  return data;
 }
+

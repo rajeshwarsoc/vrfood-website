@@ -2,29 +2,28 @@ import type { LoaderFunctionArgs } from "react-router";
 import { sanityClient } from "~/lib/sanity/client";
 
 export async function cakeDetailLoader({ params }: LoaderFunctionArgs) {
-  const cakeSlug = params.cakeId;
+  const { cakeId } = params;
 
-  if (!sanityClient || !cakeSlug) {
-    return { cake: null };
+  if (!cakeId) {
+    throw new Response("Cake not found", { status: 404 });
   }
 
-  try {
-    const cake = await sanityClient.fetch(
-      `
-      *[_type == "cake" && slug.current == $slug][0]{
-        _id,
-        title,
-        price,
-        description,
-        image
+  const query = `
+    *[_type == "cake" && slug.current == $slug][0]{
+      _id,
+      title,
+      price,
+      description,
+      image {
+        asset {
+          _ref
+        }
       }
-      `,
-      { slug: cakeSlug }
-    );
+    }
+  `;
 
-    return { cake: cake ?? null };
-  } catch (error) {
-    console.error("[cakeDetailLoader] Sanity error:", error);
-    return { cake: null };
-  }
+  const cake = await sanityClient.fetch(query, { slug: cakeId });
+
+  return { cake };
 }
+

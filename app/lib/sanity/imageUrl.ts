@@ -1,11 +1,17 @@
-import imageUrlBuilder from "@sanity/image-url";
+import { createImageUrlBuilder } from "@sanity/image-url";
 import { sanityClient } from "./client";
 
-const builder = sanityClient
-  ? imageUrlBuilder(sanityClient)
-  : null;
+const builder = createImageUrlBuilder(sanityClient);
 
+/**
+ * Accepts:
+ *  - full image object
+ *  - image.asset
+ *  - image.asset._ref
+ */
 export function urlFor(source: any) {
-  if (!builder || !source) return "";
-  return builder.image(source);
+  if (!source) return "";
+
+  return builder.image(source).auto("format");
 }
+

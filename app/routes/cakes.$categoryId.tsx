@@ -1,58 +1,54 @@
 import { useLoaderData, Link } from "react-router-dom";
 import { Header } from "~/components/header/header";
 import { FloatingMessengers } from "~/components/floating-messengers/floating-messengers";
+import { urlFor } from "~/lib/sanity/imageUrl";
+import styles from "./cakes.$categoryId.module.css";
 
 type Cake = {
   _id: string;
   title: string;
-  price: number;
-  description?: string;
-};
-
-type LoaderData = {
-  category: {
-    _id: string;
-    title: string;
-    slug: string;
-  } | null;
-  cakes: Cake[];
+  price?: number;
+  slug: string;
+  image?: any;
 };
 
 export default function CakeCategory() {
-  const { category, cakes } = useLoaderData() as LoaderData;
-
-  if (!category) {
-    return (
-      <div style={{ padding: 40 }}>
-        <Header />
-        <p>Category not found.</p>
-        <Link to="/cakes">← Back to cakes</Link>
-      </div>
-    );
-  }
+  const { category, cakes } = useLoaderData() as {
+    category: { title: string };
+    cakes: Cake[];
+  };
 
   return (
-    <div style={{ padding: 40 }}>
+    <div className={styles.container}>
       <Header />
       <FloatingMessengers />
 
-      <Link to="/cakes">← Back to cakes</Link>
+      <h1 className={styles.title}>{category.title}</h1>
 
-      <h1 style={{ marginTop: 16 }}>{category.title}</h1>
+      <div className={styles.grid}>
+        {cakes.map((cake) => {
+          const imgSrc =
+            cake.image?.asset?._id && urlFor(cake.image).width(400).url();
 
-      {cakes.length === 0 ? (
-        <p style={{ marginTop: 24 }}>No cakes in this category yet.</p>
-      ) : (
-        <ul style={{ marginTop: 24 }}>
-          {cakes.map((cake) => (
-            <li key={cake._id} style={{ marginBottom: 16 }}>
-              <strong>{cake.title}</strong>
-              {cake.price ? ` — ${cake.price} ₽` : ""}
-              {cake.description && <div>{cake.description}</div>}
-            </li>
-          ))}
-        </ul>
-      )}
+          return (
+            <Link
+              key={cake._id}
+              to={`/cakes/${category.title.toLowerCase().replace(/\s+/g, "-")}/${cake.slug}`}
+              className={styles.card}
+            >
+              {imgSrc && (
+                <img
+                  src={imgSrc}
+                  alt={cake.title}
+                  className={styles.image}
+                />
+              )}
+              <h3>{cake.title}</h3>
+              {cake.price && <p>₹{cake.price}</p>}
+            </Link>
+          );
+        })}
+      </div>
     </div>
   );
 }
