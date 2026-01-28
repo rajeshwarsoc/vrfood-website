@@ -1,7 +1,8 @@
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { useState } from "react";
 import styles from "./header.module.css";
-import { MobileMenu } from "../mobile-menu/mobile-menu";
+import MobileMenu from "../mobile-menu/mobile-menu";
+
 import { useLanguage } from "../../contexts/language-context";
 import homeIcon from "/icons/home-icon.png";
 import cakeDoodle from "/icons/cake-doodle.png";

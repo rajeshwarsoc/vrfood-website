@@ -1,5 +1,5 @@
 import type { Route } from "./+types/configurator.$designId";
-import { Link, useParams } from "react-router";
+import { Link, useParams } from "react-router-dom";
 import { ChevronRight, Check } from "lucide-react";
 import { useState } from "react";
 import styles from "./configurator.$designId.module.css";

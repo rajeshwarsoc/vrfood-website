@@ -1,5 +1,5 @@
 import type { Route } from "./+types/cakes.$categoryId";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { ChevronRight } from "lucide-react";
 import styles from "./cakes.$categoryId.module.css";
 import { Header } from "~/components/header/header";

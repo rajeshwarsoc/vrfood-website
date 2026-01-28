@@ -1,6 +1,6 @@
 import type { Route } from "./+types/cakes";
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import styles from "./cakes.module.css";
 import { Header } from "~/components/header/header";
 import { CAKE_CATEGORIES } from "~/data/cakes";
