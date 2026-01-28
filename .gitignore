@@ -1,4 +1,15 @@
 /.dazl/
+# Build output
+dist/
+
+# Dependencies
+node_modules/
+app/lib/sanity/node_modules/
+
+# Env files
+.dev.vars
+.env
+.env.*
 
 .DS_Store
 /node_modules/
