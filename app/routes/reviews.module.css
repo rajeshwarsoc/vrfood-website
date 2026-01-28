@@ -1,0 +1,122 @@
+.container {
+  min-height: 100vh;
+  background: var(--color-neutral-1);
+}
+
+.content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-5);
+}
+
+.header {
+  text-align: center;
+  margin-bottom: var(--space-8);
+}
+
+.title {
+  font-family: var(--font-heading);
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-neutral-12);
+  margin: 0 0 var(--space-3);
+}
+
+.subtitle {
+  font-family: var(--font-body);
+  font-size: 1.125rem;
+  color: var(--color-neutral-11);
+  margin: 0;
+}
+
+.formSection {
+  margin-bottom: var(--space-9);
+}
+
+.reviewsSection {
+  margin-top: var(--space-8);
+}
+
+.sectionTitle {
+  font-family: var(--font-heading);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--color-neutral-12);
+  text-align: center;
+  margin: 0 0 var(--space-6);
+}
+
+.reviewsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: var(--space-5);
+}
+
+.reviewCard {
+  background: var(--color-neutral-2);
+  border: 1px solid var(--color-neutral-5);
+  border-radius: var(--radius-3);
+  padding: var(--space-5);
+  transition: all 0.3s var(--ease-out);
+}
+
+.reviewCard:hover {
+  border-color: var(--color-accent-7);
+  box-shadow: var(--shadow-2);
+}
+
+.reviewHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-3);
+}
+
+.reviewName {
+  font-family: var(--font-subheading);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-neutral-12);
+}
+
+.stars {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.starIcon {
+  width: 20px;
+  height: 20px;
+}
+
+.reviewText {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  line-height: 1.6;
+  color: var(--color-neutral-11);
+  margin: 0 0 var(--space-3);
+}
+
+.reviewDate {
+  font-family: var(--font-caption);
+  font-size: 0.875rem;
+  color: var(--color-neutral-9);
+}
+
+@media (max-width: 768px) {
+  .content {
+    padding: var(--space-6) var(--space-4);
+  }
+
+  .title {
+    font-size: 2rem;
+  }
+
+  .sectionTitle {
+    font-size: 1.5rem;
+  }
+
+  .reviewsGrid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-
+import { Link } from "react-router";
 import { useEffect } from "react";
 import styles from "./mobile-menu.module.css";
 import { useLanguage } from "../../contexts/language-context";
@@ -59,6 +58,12 @@ export function MobileMenu({ isOpen, onClose }: MobileMenuProps) {
               <Link to="/desserts" className={styles.navLink} onClick={onClose}>
                 <img src={dessertDoodle} alt="" className={styles.navIcon} />
                 {t.nav.desserts}
+              </Link>
+            </li>
+            <li>
+              <Link to="/fillings" className={styles.navLink} onClick={onClose}>
+                <img src={dessertDoodle} alt="" className={styles.navIcon} />
+                Начинки
               </Link>
             </li>
             <li>

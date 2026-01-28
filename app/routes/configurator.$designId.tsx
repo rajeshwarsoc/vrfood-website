@@ -1,10 +1,10 @@
 import type { Route } from "./+types/configurator.$designId";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router";
 import { ChevronRight, Check } from "lucide-react";
 import { useState } from "react";
 import styles from "./configurator.$designId.module.css";
 import { Header } from "~/components/header/header";
-import { CAKE_DESIGNS, FILLINGS, DECORATIONS, CAKE_WEIGHTS, CAKE_CATEGORIES } from "~/data/cakes";
+import { CAKE_DESIGNS, FILLINGS, DECORATIONS, CAKE_CATEGORIES } from "~/data/cakes";
 import IMG_2833 from "/IMG_2833.jpeg";
 import { useLanguage } from "~/contexts/language-context";
 import { FloatingMessengers } from "~/components/floating-messengers/floating-messengers";
@@ -24,35 +24,46 @@ export default function Configurator() {
   const category = CAKE_CATEGORIES.find((c) => c.id === design?.categoryId);
 
   const [selectedFilling, setSelectedFilling] = useState<string | null>(null);
-  const [selectedWeight, setSelectedWeight] = useState<number>(2);
+  const [selectedWeight, setSelectedWeight] = useState<number>(category?.id === "bento" ? 0.5 : 2);
   const [selectedDecorations, setSelectedDecorations] = useState<string[]>([]);
-  const [add500g, setAdd500g] = useState<boolean>(false);
 
-  // Calculate total price using the formula:
-  // final_total = (price_per_kg + filling_modifier_per_kg) × total_selected_weight + decorations_total
-  // Note: Removed useMemo to ensure price always recalculates on any state change
+  const isBentoCake = category?.id === "bento";
+  const minWeight = isBentoCake ? 0.5 : 2;
+  const maxWeight = isBentoCake ? 1.5 : 20;
+
+  const incrementWeight = (amount: number) => {
+    setSelectedWeight((prev) => {
+      const newWeight = prev + amount;
+      if (newWeight > maxWeight) return maxWeight;
+      if (newWeight < minWeight) return minWeight;
+      return Math.round(newWeight * 10) / 10;
+    });
+  };
+
+  const decrementWeight = (amount: number) => {
+    setSelectedWeight((prev) => {
+      const newWeight = prev - amount;
+      if (newWeight < minWeight) return minWeight;
+      return Math.round(newWeight * 10) / 10;
+    });
+  };
+
   const calculateTotalPrice = (): number | null => {
     if (!design) return null;
 
-    // Return null if no filling is selected (initial state)
     if (!selectedFilling) return null;
 
     const price_per_kg = design.basePrice;
-    
-    // Calculate total weight (base + optional 500g)
-    const total_selected_weight = selectedWeight + (add500g ? 0.5 : 0);
+    const total_selected_weight = selectedWeight;
 
-    // Get filling modifier (pricePerKg from selected filling)
     const filling = FILLINGS.find((f) => f.id === selectedFilling);
     const filling_modifier_per_kg = filling?.pricePerKg || 0;
 
-    // Calculate decorations total
     const decorations_total = selectedDecorations.reduce((sum, decorationId) => {
       const decoration = DECORATIONS.find((d) => d.id === decorationId);
       return sum + (decoration?.price || 0);
     }, 0);
 
-    // Apply the formula
     const final_total = (price_per_kg + filling_modifier_per_kg) * total_selected_weight + decorations_total;
 
     return final_total;
@@ -75,9 +86,8 @@ export default function Configurator() {
       .filter(Boolean)
       .join(", ");
 
-    const totalWeight = selectedWeight + (add500g ? 0.5 : 0);
-    const weightText = add500g 
-      ? `${selectedWeight} ${t.common.kg} + 500 г (${t.configurator.total} ${totalWeight} ${t.common.kg})` 
+    const weightText = isBentoCake
+      ? `${selectedWeight * 1000} г`
       : `${selectedWeight} ${t.common.kg}`;
 
     const finalPrice = totalPrice !== null ? totalPrice : design.basePrice * selectedWeight;
@@ -119,6 +129,48 @@ export default function Configurator() {
         <div className={styles.designSection}>
           <img src={IMG_2833} alt={design.name} className={styles.designImage} loading="lazy" />
           <h1 className={styles.designName}>{design.name}</h1>
+        </div>
+
+        <div className={styles.section}>
+          <h2 className={styles.sectionTitle}>{t.configurator.weight}</h2>
+          <div className={styles.weightControls}>
+            <div className={styles.weightDisplay}>
+              <span className={styles.weightLabel}>Вес:</span>
+              <span className={styles.weightValue}>
+                {isBentoCake ? `${selectedWeight * 1000} г` : `${selectedWeight} кг`}
+              </span>
+            </div>
+            <div className={styles.weightButtons}>
+              <button
+                type="button"
+                className={styles.weightButton}
+                onClick={() => decrementWeight(1)}
+                disabled={selectedWeight <= minWeight}
+              >
+                -1 кг
+              </button>
+              <button
+                type="button"
+                className={styles.weightButton}
+                onClick={() => incrementWeight(1)}
+                disabled={selectedWeight >= maxWeight}
+              >
+                +1 кг
+              </button>
+              <button
+                type="button"
+                className={styles.weightButton}
+                onClick={() => incrementWeight(0.5)}
+                disabled={selectedWeight >= maxWeight}
+              >
+                +500 г
+              </button>
+            </div>
+            <div className={styles.weightRange}>
+              <span>Мин: {isBentoCake ? `${minWeight * 1000} г` : `${minWeight} кг`}</span>
+              <span>Макс: {isBentoCake ? `${maxWeight * 1000} г` : `${maxWeight} кг`}</span>
+            </div>
+          </div>
         </div>
 
         <div className={styles.section}>
@@ -183,35 +235,6 @@ export default function Configurator() {
         </div>
 
         <div className={styles.section}>
-          <h2 className={styles.sectionTitle}>{t.configurator.weight}</h2>
-          <div className={styles.weightButtons}>
-            {CAKE_WEIGHTS.map((weight) => (
-              <button
-                key={weight}
-                className={styles.weightButton}
-                data-selected={selectedWeight === weight}
-                onClick={() => setSelectedWeight(weight)}
-              >
-                {weight} {t.common.kg}
-              </button>
-            ))}
-          </div>
-          <div className={styles.addon500g}>
-            <div
-              className={styles.addon500gCard}
-              data-selected={add500g}
-              onClick={() => setAdd500g(!add500g)}
-            >
-              <div className={styles.checkbox}>{add500g && <Check />}</div>
-              <div className={styles.addon500gInfo}>
-                <p className={styles.addon500gName}>{t.configurator.add500g}</p>
-                <p className={styles.addon500gDescription}>{t.configurator.add500gHelper}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className={styles.section}>
           <h2 className={styles.sectionTitle}>Украшения (опционально)</h2>
           <div className={styles.decorationsGrid}>
             {DECORATIONS.map((decoration) => (
@@ -229,6 +252,10 @@ export default function Configurator() {
               </div>
             ))}
           </div>
+        </div>
+
+        <div className={styles.section}>
+          <p className={styles.preorderNote}>⏰ Предзаказ минимум за 3 дня</p>
         </div>
       </div>
 

@@ -1,55 +1,56 @@
-import { useLoaderData, Link } from "react-router-dom";
-import { Header } from "~/components/header/header";
-import { FloatingMessengers } from "~/components/floating-messengers/floating-messengers";
-import { urlFor } from "~/lib/sanity/imageUrl";
+import type { Route } from "./+types/cakes.$categoryId";
+import { Link, useNavigate, useParams } from "react-router";
+import { ChevronRight } from "lucide-react";
 import styles from "./cakes.$categoryId.module.css";
+import { Header } from "~/components/header/header";
+import { CAKE_CATEGORIES, CAKE_DESIGNS } from "~/data/cakes";
+import { FloatingMessengers } from "~/components/floating-messengers/floating-messengers";
 
-type Cake = {
-  _id: string;
-  title: string;
-  price?: number;
-  slug: string;
-  image?: any;
-};
+export function meta({ params }: Route.MetaArgs) {
+  const category = CAKE_CATEGORIES.find((c) => c.id === params.categoryId);
+  return [
+    { title: `${category?.name || "Торты"} | VRfood` },
+    { name: "description", content: `Выберите дизайн торта в категории ${category?.name}` },
+  ];
+}
 
 export default function CakeCategory() {
-  const { category, cakes } = useLoaderData() as {
-    category: { title: string };
-    cakes: Cake[];
-  };
+  const { categoryId } = useParams();
+  const navigate = useNavigate();
+  const category = CAKE_CATEGORIES.find((c) => c.id === categoryId);
+  const designs = CAKE_DESIGNS.filter((d) => d.categoryId === categoryId);
+
+  if (!category) {
+    return null;
+  }
 
   return (
     <div className={styles.container}>
       <Header />
       <FloatingMessengers />
+      <div className={styles.content}>
+        <div className={styles.breadcrumb}>
+          <Link to="/cakes">Торты</Link>
+          <ChevronRight />
+          <span>{category.name}</span>
+        </div>
 
-      <h1 className={styles.title}>{category.title}</h1>
+        <div className={styles.header}>
+          <h1 className={styles.title}>{category.name}</h1>
+        </div>
 
-      <div className={styles.grid}>
-        {cakes.map((cake) => {
-          const imgSrc =
-            cake.image?.asset?._id && urlFor(cake.image).width(400).url();
-
-          return (
-            <Link
-              key={cake._id}
-              to={`/cakes/${category.title.toLowerCase().replace(/\s+/g, "-")}/${cake.slug}`}
-              className={styles.card}
-            >
-              {imgSrc && (
-                <img
-                  src={imgSrc}
-                  alt={cake.title}
-                  className={styles.image}
-                />
-              )}
-              <h3>{cake.title}</h3>
-              {cake.price && <p>₹{cake.price}</p>}
-            </Link>
-          );
-        })}
+        <div className={styles.grid}>
+          {designs.map((design) => (
+            <div key={design.id} className={styles.designCard} onClick={() => navigate(`/configurator/${design.id}`)}>
+              <img src={design.image} alt={design.name} className={styles.designImage} loading="lazy" />
+              <div className={styles.designInfo}>
+                <h2 className={styles.designName}>{design.name}</h2>
+                <p className={styles.designPrice}>Цена от {design.basePrice.toLocaleString("ru-RU")} ₽</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
 }
-

@@ -25,6 +25,39 @@
   margin: 0;
 }
 
+.categories {
+  display: flex;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+  overflow-x: auto;
+  padding-bottom: var(--space-2);
+}
+
+.categoryButton {
+  padding: var(--space-3) var(--space-4);
+  background-color: var(--color-card);
+  border: 2px solid var(--color-neutral-4);
+  border-radius: var(--radius-4);
+  color: var(--color-text-primary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s var(--ease);
+  white-space: nowrap;
+  font-size: var(--font-size-1);
+  font-family: inherit;
+}
+
+.categoryButton:hover {
+  border-color: var(--color-accent-7);
+  background-color: var(--color-mint-soft);
+}
+
+.categoryButton[data-active="true"] {
+  border-color: var(--color-accent-9);
+  background-color: var(--color-accent-9);
+  color: white;
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr;

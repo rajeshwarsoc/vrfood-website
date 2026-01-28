@@ -47,12 +47,13 @@
 
 .categoryButton:hover {
   border-color: var(--color-accent-7);
+  background-color: var(--color-mint-soft);
 }
 
 .categoryButton[data-active="true"] {
   border-color: var(--color-accent-9);
-  background-color: var(--color-accent-1);
-  color: var(--color-accent-11);
+  background-color: var(--color-accent-9);
+  color: white;
 }
 
 .grid {
@@ -135,8 +136,9 @@
 }
 
 .orderButton:hover {
-  background-color: var(--color-accent-10);
+  background-color: var(--color-sage);
   transform: translateY(-2px);
+  box-shadow: var(--shadow-3);
 }
 
 .orderButton svg {

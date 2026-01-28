@@ -1,5 +1,4 @@
-import { Link } from "react-router-dom";
-
+import { Link } from "react-router";
 import { useState } from "react";
 import styles from "./header.module.css";
 import { MobileMenu } from "../mobile-menu/mobile-menu";
@@ -43,6 +42,12 @@ export function Header() {
                 <Link to="/desserts" className={styles.navLink}>
                   <img src={dessertDoodle} alt="" className={styles.navIcon} />
                   {t.nav.desserts}
+                </Link>
+              </li>
+              <li>
+                <Link to="/fillings" className={styles.navLink}>
+                  <img src={dessertDoodle} alt="" className={styles.navIcon} />
+                  Начинки
                 </Link>
               </li>
               <li>

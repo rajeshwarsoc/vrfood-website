@@ -1,6 +1,5 @@
 import type { Route } from "./+types/home";
-import { Link } from "react-router-dom";
-
+import { Link } from "react-router";
 
 import styles from "./home.module.css";
 import { Header } from "~/components/header/header";
@@ -78,22 +77,12 @@ export default function Home() {
           </Link>
         </div>
         <div className={styles.cardsScroll}>
-    {featuredFood.map((item) => (
-  <Link
-    key={item.id}
-    to="/food"
-    className={styles.categoryCard}
-  >
-    <img
-      src={item.image}
-      alt={item.name}
-      className={styles.categoryImage}
-      loading="lazy"
-    />
-    <div className={styles.categoryName}>{item.name}</div>
-  </Link>
-))}
-
+          {featuredFood.map((item) => (
+            <Link key={item.id} to="/food" className={styles.categoryCard}>
+              <img src={item.image} alt={item.name} className={styles.categoryImage} loading="lazy" />
+              <div className={styles.categoryName}>{item.name}</div>
+            </Link>
+          ))}
         </div>
       </section>
 
@@ -125,9 +114,12 @@ export default function Home() {
       <section className={styles.section}>
         <div className={styles.sectionHeader}>
           <h2 className={styles.sectionTitle}>{t.home.reviews.title}</h2>
+          <Link to="/reviews" className={styles.sectionLink}>
+            Все отзывы <img src={arrowIcon} alt="" className={styles.linkIcon} />
+          </Link>
         </div>
         <div className={styles.reviewsGrid}>
-          {REVIEWS.map((review) => (
+          {REVIEWS.slice(0, 3).map((review) => (
             <div key={review.id} className={styles.reviewCard}>
               <div className={styles.reviewHeader}>
                 <span className={styles.reviewName}>{review.name}</span>
